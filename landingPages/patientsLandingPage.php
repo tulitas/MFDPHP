@@ -29,13 +29,12 @@
                     echo "<table class='table table-bordered table-striped'>";
                     echo "<thead>";
                     echo "<tr>";
-                    echo "<th>#</th>";
                     echo "<th>Datums</th>";
                     echo "<th>Vards</th>";
                     echo "<th>Uzvards</th>";
                     echo "<th>Sūdzības un anamnēze</th>";
                     echo "<th>Blakus slimības</th>";
-                    echo "<th>Medikamentu nepanesamība, alerģijas</th>";
+                    echo "<th>Medikamentu neparnesamība, alerģijas</th>";
                     echo "<th>Personas Kods</th>";
                     echo "<th>Action</th>";
                     echo "</tr>";
@@ -76,6 +75,6 @@
         </div>
     </div>
 </div>
-<a href="index.php">home</a>
+<a href="/MFDPHP/index.php">home</a>
 </body>
 </html>

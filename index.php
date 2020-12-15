@@ -11,11 +11,19 @@
 <body>
 <?php
 echo "This is MFD PHP task project!";
+
 ?><br>
 <br>
-<div class="btn-group" role="group" aria-label="Basic example">
-    <a class="btn btn-primary" href="landingPages/patientsLandingPages.php" role="button">Pacientu meklešana</a>
-    <a class="btn btn-primary" href="#" role="button">Pievienot jaunu</a>
-</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+
+                <a class="btn btn-primary" href="landingPages/patientsLandingPage.php" role="button">Pacientu saraksts</a>
+                <a class="btn btn-primary" href="searches/patientsSearchPage.php" role="button">Pacientu meklešana</a>
+                <a class="btn btn-primary" href="#" role="button">Pievienot jaunu</a>
+
+        </div>
+    </div>
+
 </body>
 </html>
