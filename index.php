@@ -20,7 +20,7 @@ echo "This is MFD PHP task project!";
 
                 <a class="btn btn-primary" href="landingPages/patientsLandingPage.php" role="button">Pacientu saraksts</a>
                 <a class="btn btn-primary" href="searches/patientsSearchPage.php" role="button">Pacientu meklešana</a>
-                <a class="btn btn-primary" href="#" role="button">Pievienot jaunu</a>
+                <a class="btn btn-primary" href="patientsCrudOperations/createPatient.php" role="button">Izveidot pacientu</a>
 
         </div>
     </div>
