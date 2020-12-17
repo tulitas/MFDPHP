@@ -8,7 +8,7 @@ $date = $name = $lastname = $complaintshistory = $adjacentdiseases = $allergies 
 $date_err = $name_err = $lastname_err = $complaintshistory_err = $adjacentdiseases_err = $allergies_err = $pk_err = "";
 
 // Processing form data when form is submitted
-if(isset($_POST["id"]) && !empty($_POST["id"])){
+if (isset($_POST["id"]) && !empty($_POST["id"])) {
     // Get hidden input value
     $id = $_POST["id"];
 
@@ -60,37 +60,38 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     } else {
         $pk = $input_pk;
     }
-
-
-    // Check input errors before inserting in database
-    if(empty($county_err) && empty($country_err) && empty($town_err)){
+// Check input errors before inserting in database
+    if (empty($county_err) && empty($country_err) && empty($town_err)) {
         // Prepare an update statement
-        $sql = "UPDATE patients SET date=?, name=?, lastname=?,
+        $sql = "UPDATE patients SET pk=?, date=?, name=?, lastname=?,
                                 complaintshistory=?, adjacentdiseases=?,
-                                 allergies=?, pk=?, where id=?";
+                                 allergies=?  where id=?";
 
-        if($stmt = mysqli_prepare($link, $sql)){
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssss",$param_date,
-                $param_name, $param_lastname, $param_complaintshistory, $param_adjacentdiseases,
-                $param_allergies, $param_pk);
+            mysqli_stmt_bind_param($stmt, "sssssss", $param_pk,$param_date,
+                $param_name, $param_lastname,
+                $param_complaintshistory, $param_adjacentdiseases,
+                $param_allergies
+                );
 
             // Set parameters
+            $param_pk = $pk;
             $param_date = $date;
             $param_name = $name;
             $param_lastname = $lastname;
             $param_complaintshistory = $complaintshistory;
             $param_adjacentdiseases = $adjacentdiseases;
             $param_allergies = $allergies;
-            $param_pk = $pk;
+
 
 
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if (mysqli_stmt_execute($stmt)) {
                 // Records updated successfully. Redirect to landing page
-                header("location: http://localhost:63342/MFDPHP/landingPages/patientsLandingPage.php");
+                header("location: patientsLandingPage.php");
                 exit();
-            } else{
+            } else {
                 echo "Something went wrong. Please try again later.";
             }
         }
@@ -102,15 +103,15 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Close connection
     mysqli_close($link);
 
-} else{
+} else {
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         // Get URL parameter
-        $id =  trim($_GET["id"]);
+        $id = trim($_GET["id"]);
 
         // Prepare a select statement
-        $sql = "SELECT * FROM rent WHERE id = ?";
-        if($stmt = mysqli_prepare($link, $sql)){
+        $sql = "SELECT * FROM patients WHERE id = ?";
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_id);
 
@@ -118,29 +119,30 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $param_id = $id;
 
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if (mysqli_stmt_execute($stmt)) {
                 $result = mysqli_stmt_get_result($stmt);
 
-                if(mysqli_num_rows($result) == 1){
+                if (mysqli_num_rows($result) == 1) {
                     /* Fetch result row as an associative array. Since the result set contains only one row, we don't need to use while loop */
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
                     // Retrieve individual field value
+                    $pk = $row["pk"];
                     $date = $row["date"];
-                    $cname = $row["name"];
+                    $name = $row["name"];
                     $lastname = $row["lastname"];
                     $complaintshistory = $row["complaintshistory"];
                     $adjacentdiseases = $row["adjacentdiseases"];
                     $allergies = $row["allergies"];
-                    $pk = $row["pk"];
 
-                } else{
+
+                } else {
                     // URL doesn't contain valid id. Redirect to error page
-                    header("location: error.php");
+//                    header("location: error.php");
                     exit();
                 }
 
-            } else{
+            } else {
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
@@ -150,14 +152,13 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
 
         // Close connection
         mysqli_close($link);
-    }  else{
+    } else {
         // URL doesn't contain id parameter. Redirect to error page
-        header("location: error.php");
+//        header("location: error.php");
         exit();
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,67 +166,81 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     <title>Update Record</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
-        .wrapper{
+        .wrapper {
             width: 500px;
             margin: 0 auto;
         }
     </style>
 </head>
 <body>
-<div class="wrapper">
-    <div class="container-fluid">
+<div class="page-header">
+    <h2>Update Record</h2>
+</div>
+<p>Please edit the input values and submit to update the record.</p>
+<form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+
+    <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="page-header">
-                    <h2>Update Record</h2>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Personas Kods</label>
+                    <input type="text" name="pk" class="form-control" value="<?php echo $pk; ?>">
                 </div>
-                <p>Please edit the input values and submit to update the record.</p>
-                <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
-                    <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
-                        <label>Vards</label>
-                        <input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
-                    </div>
+            </div>
 
-                    <div class="form-group <?php echo (!empty($lastname_err)) ? 'has-error' : ''; ?>">
-                        <label>Uzvards</label>
-                        <textarea name="lastname" class="form-control"><?php echo $lastname; ?></textarea>
-                    </div>
+            <div class="col-md-3">
+                <div class="form-group <?php echo (!empty($date_err)) ? 'has-error' : ''; ?>">
+                    <label>Datums</label>
+                    <input type="text" name="date" class="form-control" value="<?php echo $date; ?>">
+                </div>
+            </div>
 
-                    <div class="form-group <?php echo (!empty($complaintshistory_err)) ? 'has-error' : ''; ?>">
-                        <label>Sūdzības un anamnēze</label>
-                        <input type="text" name="complaintshistory" class="form-control" value="<?php echo $complaintshistory; ?>">
-                    </div>
+            <div class="col-md-3">
+                <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
+                    <label>Vards</label>
+                    <input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Blakus slimības</label>
-                        <input type="text" name="adjacentdiseases" class="form-control" value="<?php echo $adjacentdiseases; ?>">
-                    </div>
+            <div class="col-md-3">
+                <div class="form-group <?php echo (!empty($lastname_err)) ? 'has-error' : ''; ?>">
+                    <label>Uzvards</label>
+                    <input type="text" name="lastname" class="form-control"
+                           value="<?php echo $lastname; ?>">
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Medikamentu nepanesamība, alerģijas</label>
-                        <input type="text" name="allergies" class="form-control" value="<?php echo $allergies; ?>">
-                    </div>
+            <div class="col-md-12">
+                <div class="form-group <?php echo (!empty($complaintshistory_err)) ? 'has-error' : ''; ?>">
+                    <label>Sūdzības un anamnēze</label>
+                    <textarea name="complaintshistory" class="form-control"><?php echo $complaintshistory; ?></textarea>
+                </div>
+            </div>
 
-                    <input type="file" name="date" class="form-control" value="<?php echo $date_err; ?>"/>
-                    <div class="form-group">
-                        <label>NDatums</label>
-                        <input type="text" name="date" class="form-control" value="<?php echo $date; ?>">
-                    </div>
 
-                    <div class="form-group">
-                        <label>Personas Kods</label>
-                        <input type="text" name="pk" class="form-control" value="<?php echo $pk; ?>">
-                    </div>
+            <div class="col-md-12">
+                <div class="form-group <?php echo (!empty($adjacentdiseases_err)) ? 'has-error' : ''; ?>">
+                    <label>Blakus slimības</label>
+                    <textarea name="adjacentdiseases" class="form-control"><?php echo $adjacentdiseases; ?></textarea>
+                </div>
+            </div>
 
-                    <input type="hidden" name="id" value="<?php echo $id; ?>"/>
-                    <input type="submit" class="btn btn-primary" value="Submit">
-                    <a href="index.php" class="btn btn-default">Cancel</a>
-                </form>
+            <div class="col-md-12">
+                <div class="form-group <?php echo (!empty($allergies_err)) ? 'has-error' : ''; ?>">
+                    <label>Medikamentu nepanesamība, alerģijas</label>
+                    <textarea name="allergies" class="form-control"><?php echo $allergies; ?></textarea>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <input type="hidden" name="id" value="<?php echo $id; ?>"/>
+                <input type="submit" class="btn btn-primary" value="Submit">
+                <a href="../index.php" class="btn btn-default">Cancel</a>
             </div>
         </div>
     </div>
+</form>
 </div>
-<a href="index.php">home</a>
-
 </body>
 </html>
+

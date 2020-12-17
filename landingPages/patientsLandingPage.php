@@ -50,7 +50,6 @@
                         echo "<td>" . $row['adjacentdiseases'] . "</td>";
                         echo "<td>" . $row['allergies'] . "</td>";
                         echo "<td>" . $row['pk'] . "</td>";
-
                         echo "<td>";
                         echo "<a href='readPage.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'><span class='glyphicon glyphicon-eye-open'></span></a>";
                         echo "<a href='patientUpdatePage.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><span class='glyphicon glyphicon-pencil'></span></a>";
