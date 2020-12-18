@@ -89,7 +89,7 @@ if (isset($_POST["id"]) && !empty($_POST["id"])) {
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 // Records updated successfully. Redirect to landing page
-                header("location: patientsLandingPage.php");
+                header("location: http://localhost:63342/MFDPHP/landingPages/patientsLandingPage.php");
                 exit();
             } else {
                 echo "Something went wrong. Please try again later.";
